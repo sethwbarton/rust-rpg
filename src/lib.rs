@@ -10,6 +10,8 @@ pub mod lib {
     // Size of my laptop monitor in iTerm at full screen
     pub const SCREEN_HEIGHT: u32 = 55;
     pub const SCREEN_WIDTH: u32 = 214;
+    pub const PLAY_AREA_WIDTH: u32 = SCREEN_WIDTH - 60;
+    pub const PLAY_AREA_HEIGHT: u32 = SCREEN_HEIGHT - 10;
 
     pub fn run() {
         let mut engine =
@@ -26,8 +28,8 @@ pub mod lib {
             engine.rect(
                 0,
                 0,
-                (SCREEN_WIDTH - 1) as i32,
-                (SCREEN_HEIGHT - 1) as i32,
+                (PLAY_AREA_WIDTH) as i32,
+                (PLAY_AREA_HEIGHT) as i32,
                 pixel::pxl_fg('█', Color::Cyan),
             );
 
