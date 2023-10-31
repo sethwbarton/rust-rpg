@@ -1,4 +1,10 @@
+pub mod game;
+
 pub mod lib {
+    use crate::game::drawable::Drawable;
+    use crate::game::game_state::GameState;
+    use crate::game::input::handle_input;
+    use crate::game::player::Player;
     use console_engine::{pixel, Color, KeyCode};
 
     // Size of my laptop monitor in iTerm at full screen
@@ -9,8 +15,9 @@ pub mod lib {
         let mut engine =
             console_engine::ConsoleEngine::init(SCREEN_WIDTH, SCREEN_HEIGHT, 60).unwrap();
 
-        let mut player_x = 3;
-        let mut player_y = 3;
+        let mut game_state = GameState {
+            player: Player { x: 3, y: 3 },
+        };
 
         loop {
             engine.wait_frame();
@@ -24,29 +31,16 @@ pub mod lib {
                 pixel::pxl_fg('█', Color::Cyan),
             );
 
-            if engine.is_key_pressed(KeyCode::Char('w')) {
-                player_y -= 1;
-            }
+            handle_input(&mut game_state, &engine);
 
-            if engine.is_key_pressed(KeyCode::Char('s')) {
-                player_y += 1;
-            }
+            game_state.player.draw(&mut engine);
 
-            if engine.is_key_pressed(KeyCode::Char('a')) {
-                player_x -= 1;
-            }
-            if engine.is_key_pressed(KeyCode::Char('d')) {
-                player_x += 1;
-            }
+            engine.draw(); // draw the screen
 
             if engine.is_key_pressed(KeyCode::Char('q')) {
                 // if the user presses 'q' :
-                break; // exits app
+                break;
             }
-
-            engine.set_pxl(player_x, player_y, pixel::pxl_fg('O', Color::Green));
-
-            engine.draw(); // draw the screen
         }
     }
 }
