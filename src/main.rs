@@ -1,4 +1,8 @@
+mod game;
+
 use nannou::prelude::*;
+use crate::game::player::Player;
+use crate::game::drawable::Drawable;
 
 fn main() {
     nannou::app(model)
@@ -7,15 +11,21 @@ fn main() {
         .run();
 }
 
-struct Model {}
+struct Model {
+    player: Player
+}
 
 fn model(_app: &App) -> Model {
-    Model {}
+    Model { player: Player { x: 0.0, y: 0.0 } }
 }
 
 fn update(_app: &App, _model: &mut Model, _update: Update) {
 }
 
 fn view(_app: &App, _model: &Model, frame: Frame){
-    frame.clear(PURPLE);
+    let draw = _app.draw();
+
+    _model.player.draw(&draw);
+
+    draw.to_frame(_app, &frame).unwrap();
 }
