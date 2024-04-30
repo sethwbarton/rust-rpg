@@ -1,7 +1,6 @@
 mod game;
 
 use nannou::prelude::*;
-use nannou::winit::event::VirtualKeyCode;
 use crate::game::player::Player;
 use crate::game::drawable::Drawable;
 use crate::game::controllable::Controllable;
@@ -22,7 +21,7 @@ fn model(_app: &App) -> Model {
 }
 
 fn update(_app: &App, _model: &mut Model, _update: Update) {
-    _model.player.handle_input(&_app)
+    _model.player.handle_input(&_app.keys.down)
 }
 
 fn view(_app: &App, _model: &Model, frame: Frame){
