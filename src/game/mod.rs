@@ -1,3 +1,3 @@
-pub mod drawable;
-pub mod player;
 pub(crate) mod controllable;
+pub mod drawable;
+pub mod ship;
