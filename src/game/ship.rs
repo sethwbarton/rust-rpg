@@ -1,13 +1,14 @@
-use crate::game::drawable::Drawable;
-use crate::Model;
 use nannou::color::STEELBLUE;
-use nannou::prelude::pt2;
 use nannou::Draw;
+use nannou::prelude::pt2;
+
+use crate::game::drawable::Drawable;
+use crate::game::game_state::game_state::GameState;
 
 pub struct Ship {}
 
 impl Drawable for Ship {
-    fn draw(self: &Self, draw: &Draw, _model: &Model) -> () {
+    fn draw(self: &Self, draw: &Draw, _model: &GameState) -> () {
         let point1 = pt2(0.0 + _model.transform.x, 20.0 + _model.transform.y);
         let point2 = pt2(10.0 + _model.transform.x, 0.0 + _model.transform.y);
         let point3 = pt2(0.0 + _model.transform.x, -20.0 + _model.transform.y);
