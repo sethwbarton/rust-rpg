@@ -17,16 +17,16 @@ fn main() {
         .run();
 }
 
-struct Settings {
-    zoom_sensitivity: f64,
-    pan_speed: f32,
-}
-
 struct Model {
     ship: Ship,
     scale: f64,
     transform: Point2,
     settings: Settings,
+}
+
+struct Settings {
+    zoom_sensitivity: f64,
+    pan_speed: f32,
 }
 
 fn model(_app: &App) -> Model {
@@ -56,8 +56,23 @@ fn event(_app: &App, _model: &mut Model, _event: Event) {
                 MouseEntered => {}
                 MouseExited => {}
                 MouseWheel(mouse_scroll_delta, _) => match mouse_scroll_delta {
-                    MouseScrollDelta::LineDelta(_, _) => {}
+                    MouseScrollDelta::LineDelta(x, y) => {
+                        println!("Line Delta called: {},{}", x, y);
+                        let tapered_y_scroll = (y as f64) * _model.settings.zoom_sensitivity;
+                        if _model.scale + tapered_y_scroll <= ZOOM_MAX
+                            && _model.scale + tapered_y_scroll >= ZOOM_MIN
+                        {
+                            _model.scale += tapered_y_scroll;
+                            return;
+                        }
+                        if _model.scale + tapered_y_scroll > ZOOM_MAX {
+                            _model.scale = ZOOM_MAX;
+                            return;
+                        }
+                        _model.scale = ZOOM_MIN
+                    }
                     MouseScrollDelta::PixelDelta(pixels) => {
+                        println!("Pixel delta called");
                         let tapered_y_scroll = pixels.y * _model.settings.zoom_sensitivity;
                         if _model.scale + tapered_y_scroll <= ZOOM_MAX
                             && _model.scale + tapered_y_scroll >= ZOOM_MIN
