@@ -3,13 +3,14 @@ pub mod event_handling {
     use crate::{ZOOM_MAX, ZOOM_MIN};
     use nannou::event::{MouseScrollDelta, Update};
     use nannou::prelude::{
-        Closed, DroppedFile, Focused, HoveredFile, HoveredFileCancelled, KeyPressed, KeyReleased,
-        MouseEntered, MouseExited, MouseMoved, MousePressed, MouseReleased, MouseWheel, Moved,
-        ReceivedCharacter, Resized, Touch, TouchPressure, Unfocused,
+        Closed, DroppedFile, Focused, HoveredFile, HoveredFileCancelled, Key, KeyPressed,
+        KeyReleased, MouseEntered, MouseExited, MouseMoved, MousePressed, MouseReleased,
+        MouseWheel, Moved, ReceivedCharacter, Resized, Touch, TouchPressure, Unfocused,
     };
     use nannou::winit::event::VirtualKeyCode;
     use nannou::Event::WindowEvent;
     use nannou::{App, Event};
+    use std::collections::HashSet;
 
     pub fn event(_app: &App, _model: &mut GameState, _event: Event) {
         match _event {
@@ -48,17 +49,21 @@ pub mod event_handling {
     }
 
     pub fn update(_app: &App, _model: &mut GameState, _update: Update) {
-        if _app.keys.down.contains(&VirtualKeyCode::W) {
-            _model.transform.y += _model.settings.pan_speed;
+        handle_key_presses(&_app.keys.down, _model);
+    }
+
+    pub fn handle_key_presses(down_keys: &HashSet<VirtualKeyCode>, _model: &mut GameState) {
+        if (down_keys.contains(&VirtualKeyCode::A)) {
+            _model.transform.x += _model.settings.pan_speed;
         }
-        if _app.keys.down.contains(&VirtualKeyCode::A) {
+        if down_keys.contains(&VirtualKeyCode::D) {
             _model.transform.x -= _model.settings.pan_speed
         }
-        if _app.keys.down.contains(&VirtualKeyCode::D) {
-            _model.transform.x += _model.settings.pan_speed
+        if down_keys.contains(&VirtualKeyCode::W) {
+            _model.transform.y -= _model.settings.pan_speed;
         }
-        if _app.keys.down.contains(&VirtualKeyCode::S) {
-            _model.transform.y -= _model.settings.pan_speed
+        if down_keys.contains(&VirtualKeyCode::S) {
+            _model.transform.y += _model.settings.pan_speed;
         }
     }
 
@@ -80,8 +85,11 @@ pub mod event_handling {
 mod tests {
     use crate::game::game_state::game_state::{GameState, Settings};
     use crate::game::ship::Ship;
-    use crate::ui::event_handling::event_handling::handle_scroll;
+    use crate::ui::event_handling::event_handling::{handle_key_presses, handle_scroll};
     use crate::{ZOOM_MAX, ZOOM_MIN};
+    use nannou::geom::pt2;
+    use nannou::winit::event::VirtualKeyCode;
+    use std::collections::HashSet;
 
     #[test]
     fn test_handle_scroll_respects_zoom_sensitivity() {
@@ -139,5 +147,77 @@ mod tests {
         handle_scroll(scroll_delta, &mut test_model);
 
         assert_eq!(test_model.scale, ZOOM_MIN)
+    }
+
+    #[test]
+    fn handle_key_press_moves_screen_right_on_a() {
+        let mut test_model = GameState {
+            ship: Ship {},
+            scale: 1.0,
+            transform: pt2(0.0, 0.0),
+            settings: Settings {
+                zoom_sensitivity: 0.05,
+                pan_speed: 6.0,
+            },
+        };
+
+        let down_keys: HashSet<VirtualKeyCode> = HashSet::from([VirtualKeyCode::A]);
+        handle_key_presses(&down_keys, &mut test_model);
+
+        assert_eq!(test_model.transform.x, test_model.settings.pan_speed)
+    }
+
+    #[test]
+    fn handle_key_press_moves_screen_left_on_d() {
+        let mut test_model = GameState {
+            ship: Ship {},
+            scale: 1.0,
+            transform: pt2(0.0, 0.0),
+            settings: Settings {
+                zoom_sensitivity: 0.05,
+                pan_speed: 6.0,
+            },
+        };
+
+        let down_keys: HashSet<VirtualKeyCode> = HashSet::from([VirtualKeyCode::D]);
+        handle_key_presses(&down_keys, &mut test_model);
+
+        assert_eq!(test_model.transform.x, -test_model.settings.pan_speed)
+    }
+
+    #[test]
+    fn handle_key_press_moves_screen_down_on_w() {
+        let mut test_model = GameState {
+            ship: Ship {},
+            scale: 1.0,
+            transform: pt2(0.0, 0.0),
+            settings: Settings {
+                zoom_sensitivity: 0.05,
+                pan_speed: 6.0,
+            },
+        };
+
+        let down_keys: HashSet<VirtualKeyCode> = HashSet::from([VirtualKeyCode::W]);
+        handle_key_presses(&down_keys, &mut test_model);
+
+        assert_eq!(test_model.transform.y, -test_model.settings.pan_speed)
+    }
+
+    #[test]
+    fn handle_key_press_moves_screen_up_on_s() {
+        let mut test_model = GameState {
+            ship: Ship {},
+            scale: 1.0,
+            transform: pt2(0.0, 0.0),
+            settings: Settings {
+                zoom_sensitivity: 0.05,
+                pan_speed: 6.0,
+            },
+        };
+
+        let down_keys: HashSet<VirtualKeyCode> = HashSet::from([VirtualKeyCode::S]);
+        handle_key_presses(&down_keys, &mut test_model);
+
+        assert_eq!(test_model.transform.y, test_model.settings.pan_speed)
     }
 }
