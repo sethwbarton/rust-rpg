@@ -1,5 +1,6 @@
 pub mod event_handling {
     use crate::game::game_state::game_state::GameState;
+    use crate::ui::view::view::handle_ui_clicks;
     use crate::{ZOOM_MAX, ZOOM_MIN};
     use nannou::event::{MouseScrollDelta, Update};
     use nannou::prelude::{
@@ -50,6 +51,7 @@ pub mod event_handling {
 
     pub fn update(_app: &App, _model: &mut GameState, _update: Update) {
         handle_key_presses(&_app.keys.down, _model);
+        handle_ui_clicks(_app);
     }
 
     pub fn handle_key_presses(down_keys: &HashSet<VirtualKeyCode>, _model: &mut GameState) {
