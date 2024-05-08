@@ -1,93 +1,91 @@
-pub mod event_handling {
-    use crate::game::game_state::game_state::GameState;
-    use crate::ui::view::view::handle_ui_clicks;
-    use crate::{ZOOM_MAX, ZOOM_MIN};
-    use nannou::event::{MouseScrollDelta, Update};
-    use nannou::prelude::{
-        Closed, DroppedFile, Focused, HoveredFile, HoveredFileCancelled, Key, KeyPressed,
-        KeyReleased, MouseEntered, MouseExited, MouseMoved, MousePressed, MouseReleased,
-        MouseWheel, Moved, ReceivedCharacter, Resized, Touch, TouchPressure, Unfocused,
-    };
-    use nannou::winit::event::VirtualKeyCode;
-    use nannou::Event::WindowEvent;
-    use nannou::{App, Event};
-    use std::collections::HashSet;
+use crate::game::game_state::game_state::GameState;
+use crate::ui::input::handle_ui_clicks;
+use crate::{ZOOM_MAX, ZOOM_MIN};
+use nannou::event::{MouseScrollDelta, Update};
+use nannou::prelude::{
+    Closed, DroppedFile, Focused, HoveredFile, HoveredFileCancelled, KeyPressed, KeyReleased,
+    MouseEntered, MouseExited, MouseMoved, MousePressed, MouseReleased, MouseWheel, Moved,
+    ReceivedCharacter, Resized, Touch, TouchPressure, Unfocused,
+};
+use nannou::winit::event::VirtualKeyCode;
+use nannou::Event::WindowEvent;
+use nannou::{App, Event};
+use std::collections::HashSet;
 
-    pub fn event(_app: &App, _model: &mut GameState, _event: Event) {
-        match _event {
-            WindowEvent { id: _, simple } => match simple {
-                None => {}
-                Some(e) => match e {
-                    Moved(_) => {}
-                    KeyPressed(_) => {}
-                    KeyReleased(_) => {}
-                    ReceivedCharacter(_) => {}
-                    MouseMoved(_) => {}
-                    MousePressed(_) => {}
-                    MouseReleased(_) => {}
-                    MouseEntered => {}
-                    MouseExited => {}
-                    MouseWheel(mouse_scroll_delta, _) => match mouse_scroll_delta {
-                        MouseScrollDelta::LineDelta(_x, y) => handle_scroll(y as f64, _model),
-                        MouseScrollDelta::PixelDelta(pixels) => handle_scroll(pixels.y, _model),
-                    },
-                    Resized(_) => {}
-                    HoveredFile(_) => {}
-                    DroppedFile(_) => {}
-                    HoveredFileCancelled => {}
-                    Touch(_) => {}
-                    TouchPressure(_) => {}
-                    Focused => {}
-                    Unfocused => {}
-                    Closed => {}
+pub fn event(_app: &App, _model: &mut GameState, _event: Event) {
+    match _event {
+        WindowEvent { id: _, simple } => match simple {
+            None => {}
+            Some(e) => match e {
+                Moved(_) => {}
+                KeyPressed(_) => {}
+                KeyReleased(_) => {}
+                ReceivedCharacter(_) => {}
+                MouseMoved(_) => {}
+                MousePressed(_) => {}
+                MouseReleased(_) => {}
+                MouseEntered => {}
+                MouseExited => {}
+                MouseWheel(mouse_scroll_delta, _) => match mouse_scroll_delta {
+                    MouseScrollDelta::LineDelta(_x, y) => handle_scroll(y as f64, _model),
+                    MouseScrollDelta::PixelDelta(pixels) => handle_scroll(pixels.y, _model),
                 },
+                Resized(_) => {}
+                HoveredFile(_) => {}
+                DroppedFile(_) => {}
+                HoveredFileCancelled => {}
+                Touch(_) => {}
+                TouchPressure(_) => {}
+                Focused => {}
+                Unfocused => {}
+                Closed => {}
             },
-            Event::DeviceEvent(_, _) => {}
-            Event::Update(_) => {}
-            Event::Suspended => {}
-            Event::Resumed => {}
-        }
+        },
+        Event::DeviceEvent(_, _) => {}
+        Event::Update(_) => {}
+        Event::Suspended => {}
+        Event::Resumed => {}
     }
+}
 
-    pub fn update(_app: &App, _model: &mut GameState, _update: Update) {
-        handle_key_presses(&_app.keys.down, _model);
-        handle_ui_clicks(_app);
-    }
+pub fn update(_app: &App, _model: &mut GameState, _update: Update) {
+    handle_key_presses(&_app.keys.down, _model);
+    handle_ui_clicks(_app);
+}
 
-    pub fn handle_key_presses(down_keys: &HashSet<VirtualKeyCode>, _model: &mut GameState) {
-        if (down_keys.contains(&VirtualKeyCode::A)) {
-            _model.transform.x += _model.settings.pan_speed;
-        }
-        if down_keys.contains(&VirtualKeyCode::D) {
-            _model.transform.x -= _model.settings.pan_speed
-        }
-        if down_keys.contains(&VirtualKeyCode::W) {
-            _model.transform.y -= _model.settings.pan_speed;
-        }
-        if down_keys.contains(&VirtualKeyCode::S) {
-            _model.transform.y += _model.settings.pan_speed;
-        }
+pub fn handle_key_presses(down_keys: &HashSet<VirtualKeyCode>, _model: &mut GameState) {
+    if down_keys.contains(&VirtualKeyCode::A) {
+        _model.transform.x += _model.settings.pan_speed;
     }
+    if down_keys.contains(&VirtualKeyCode::D) {
+        _model.transform.x -= _model.settings.pan_speed
+    }
+    if down_keys.contains(&VirtualKeyCode::W) {
+        _model.transform.y -= _model.settings.pan_speed;
+    }
+    if down_keys.contains(&VirtualKeyCode::S) {
+        _model.transform.y += _model.settings.pan_speed;
+    }
+}
 
-    pub fn handle_scroll(scroll_delta: f64, _model: &mut GameState) {
-        let tapered_y_scroll = scroll_delta * _model.settings.zoom_sensitivity;
-        if _model.scale + tapered_y_scroll > ZOOM_MAX {
-            _model.scale = ZOOM_MAX;
-            return;
-        }
-        if _model.scale + tapered_y_scroll < ZOOM_MIN {
-            _model.scale = ZOOM_MIN;
-            return;
-        }
-        _model.scale = _model.scale + tapered_y_scroll;
+pub fn handle_scroll(scroll_delta: f64, _model: &mut GameState) {
+    let tapered_y_scroll = scroll_delta * _model.settings.zoom_sensitivity;
+    if _model.scale + tapered_y_scroll > ZOOM_MAX {
+        _model.scale = ZOOM_MAX;
+        return;
     }
+    if _model.scale + tapered_y_scroll < ZOOM_MIN {
+        _model.scale = ZOOM_MIN;
+        return;
+    }
+    _model.scale = _model.scale + tapered_y_scroll;
 }
 
 #[cfg(test)]
 mod tests {
     use crate::game::game_state::game_state::{GameState, Settings};
     use crate::game::ship::Ship;
-    use crate::ui::event_handling::event_handling::{handle_key_presses, handle_scroll};
+    use crate::ui::input::event_handling::{handle_key_presses, handle_scroll};
     use crate::{ZOOM_MAX, ZOOM_MIN};
     use nannou::geom::pt2;
     use nannou::winit::event::VirtualKeyCode;

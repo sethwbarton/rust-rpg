@@ -1,6 +1,6 @@
 use crate::game::game_state::game_state::new_game_state;
-use crate::ui::event_handling::event_handling::{event, update};
-use crate::ui::view::view::app_view;
+use ui::app_view::render_app;
+use ui::input::event_handling::{event, update};
 
 mod game;
 mod ui;
@@ -12,6 +12,6 @@ fn main() {
     nannou::app(new_game_state)
         .event(event)
         .update(update)
-        .simple_window(app_view)
+        .simple_window(render_app)
         .run();
 }

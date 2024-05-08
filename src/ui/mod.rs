@@ -1,2 +1,4 @@
-pub mod event_handling;
-pub mod view;
+pub mod app_view;
+pub mod graphics;
+pub mod gui;
+pub mod input;
