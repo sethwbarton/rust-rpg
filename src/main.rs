@@ -31,7 +31,7 @@ fn new_game(_app: &App) -> GameState {
     let egui = Egui::from_window(&window);
 
     GameState {
-        egui,
+        egui: Some(egui),
         ship: Ship::new(),
         scale: 1.0,
         transform: pt2(0.0, 0.0),
@@ -50,5 +50,11 @@ pub fn update(app: &App, model: &mut GameState, update: Update) {
 pub fn render(_app: &App, _model: &GameState, frame: Frame) {
     frame.clear(BLACK);
     graphics::draw_scene(_app, _model, &frame);
-    _model.egui.draw_to_frame(&frame).unwrap()
+
+    match &_model.egui {
+        Some(ref egui) => egui.draw_to_frame(&frame).unwrap(),
+        None => {
+            panic!("Egui wasn't initialized in handle event")
+        }
+    }
 }

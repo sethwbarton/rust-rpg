@@ -44,7 +44,12 @@ pub fn handle_raw_window_event(_app: &App, model: &mut GameState, event: &Window
     }
 
     // Let egui also handle any events
-    model.egui.handle_raw_event(event);
+    match &mut model.egui {
+        Some(ref mut egui) => egui.handle_raw_event(event),
+        None => {
+            panic!("Egui wasn't initialized in handle event")
+        }
+    }
 }
 
 pub fn handle_key_presses(down_keys: &HashSet<VirtualKeyCode>, _model: &mut GameState) {

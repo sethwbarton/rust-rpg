@@ -8,7 +8,7 @@ pub mod game_state {
         pub(crate) scale: f64,
         pub(crate) transform: Point2,
         pub(crate) settings: Settings,
-        pub(crate) egui: Egui,
+        pub(crate) egui: Option<Egui>,
     }
 
     pub struct Settings {
