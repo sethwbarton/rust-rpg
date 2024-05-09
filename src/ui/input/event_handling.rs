@@ -36,7 +36,7 @@ pub fn handle_raw_window_event(_app: &App, model: &mut GameState, event: &Window
             device_id,
             delta,
             phase,
-            modifiers,
+            modifiers: _,
         } => match delta {
             MouseScrollDelta::LineDelta(_, y) => handle_scroll_lines(*y, model),
             MouseScrollDelta::PixelDelta(pixels) => handle_scroll_pixels(pixels.y, model),
