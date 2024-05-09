@@ -1,4 +1,3 @@
-pub mod app_view;
 pub mod graphics;
-pub mod gui;
+pub(crate) mod gui;
 pub mod input;

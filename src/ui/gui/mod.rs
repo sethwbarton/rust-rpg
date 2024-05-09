@@ -1,22 +1,30 @@
-pub mod components;
-
 use crate::game::game_state::game_state::GameState;
-use crate::ui::gui::components::ship_health::ShipHealthUi;
-use nannou::geom::Point2;
-use nannou::{App, Draw, Frame};
+use nannou::event::Update;
+use nannou_egui::egui;
 
-pub trait ClickableGuiElement {
-    fn on_click(self: &Self, app: &App, state: &GameState) -> ();
-    fn is_in(self: &Self, x_y: Point2) -> bool;
-    fn draw(self: &Self, app: &App, state: &GameState, draw_instance: &Draw) -> ();
-}
+pub fn draw_gui(model: &mut GameState, update: Update) {
+    let egui = &mut model.egui;
 
-pub fn draw_ui(_app: &App, state: &GameState, frame: &Frame) {
-    let ui_draw_instance = _app.draw().scale(1.0);
+    egui.set_elapsed_time(update.since_start);
+    let ctx = egui.begin_frame();
 
-    let ship_health = ShipHealthUi {};
-    ship_health.draw(_app, state, &ui_draw_instance);
+    egui::Window::new("Settings").show(&ctx, |ui| {
+        // Resolution slider
+        ui.label("Sensitivity:");
+        ui.add(egui::Slider::new(
+            &mut model.settings.zoom_sensitivity,
+            1.0..=40.0,
+        ));
 
-    ui_draw_instance.to_frame(_app, &frame).unwrap();
-    state.egui.draw_to_frame(&frame).unwrap();
+        // Scale slider
+        ui.label("Scale:");
+        ui.add(egui::Slider::new(&mut 15.0, 0.0..=1000.0));
+
+        // Rotation slider
+        ui.label("Rotation:");
+        ui.add(egui::Slider::new(&mut 15.0, 0.0..=360.0));
+
+        // Random color button
+        ui.button("Random color")
+    });
 }
