@@ -18,4 +18,5 @@ pub fn draw_ui(_app: &App, state: &GameState, frame: &Frame) {
     ship_health.draw(_app, state, &ui_draw_instance);
 
     ui_draw_instance.to_frame(_app, &frame).unwrap();
+    state.egui.draw_to_frame(&frame).unwrap();
 }

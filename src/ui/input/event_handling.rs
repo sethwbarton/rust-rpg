@@ -1,9 +1,9 @@
 use crate::game::game_state::game_state::GameState;
-use crate::ui::input::handle_ui_clicks;
 use crate::{ZOOM_MAX, ZOOM_MIN};
 use nannou::event::{MouseScrollDelta, Update};
 use nannou::winit::event::{VirtualKeyCode, WindowEvent};
 use nannou::App;
+use nannou_egui::egui;
 use std::collections::HashSet;
 
 pub fn raw_window_event(_app: &App, model: &mut GameState, event: &WindowEvent) {
@@ -46,11 +46,6 @@ pub fn raw_window_event(_app: &App, model: &mut GameState, event: &WindowEvent) 
 
     // Let egui also handle any events
     model.egui.handle_raw_event(event);
-}
-
-pub fn update(_app: &App, _model: &mut GameState, _update: Update) {
-    handle_key_presses(&_app.keys.down, _model);
-    handle_ui_clicks(_app);
 }
 
 pub fn handle_key_presses(down_keys: &HashSet<VirtualKeyCode>, _model: &mut GameState) {
