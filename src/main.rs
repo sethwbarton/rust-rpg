@@ -1,5 +1,5 @@
+use crate::game::entities::ship::Ship;
 use crate::game::game_state::game_state::{GameState, Settings};
-use crate::game::ship::Ship;
 use crate::ui::graphics;
 use crate::ui::input::event_handling::{handle_key_presses, handle_raw_window_event};
 use nannou::color::BLACK;
@@ -32,7 +32,7 @@ fn new_game(_app: &App) -> GameState {
 
     GameState {
         egui,
-        ship: Ship {},
+        ship: Ship::new(),
         scale: 1.0,
         transform: pt2(0.0, 0.0),
         settings: Settings {
