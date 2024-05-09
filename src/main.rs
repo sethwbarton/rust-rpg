@@ -1,4 +1,5 @@
 use crate::game::entities::ship::Ship;
+use crate::game::entities::thargoid::Thargoid;
 use crate::game::game_state::game_state::{GameState, Settings};
 use crate::ui::graphics;
 use crate::ui::input::event_handling::{handle_key_presses, handle_raw_window_event};
@@ -33,6 +34,10 @@ fn new_game(_app: &App) -> GameState {
     GameState {
         egui: Some(egui),
         ship: Ship::new(),
+        thargoids: Vec::from([Thargoid {
+            hp: 100,
+            xy: pt2(500.0, 500.0),
+        }]),
         scale: 1.0,
         transform: pt2(0.0, 0.0),
         settings: Settings {

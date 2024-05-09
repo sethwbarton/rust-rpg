@@ -10,5 +10,9 @@ pub fn draw_scene(_app: &App, _model: &GameState, frame: &Frame) {
         0.0,
     ));
     _model.ship.draw(&scene_draw_instance, _model);
+    _model
+        .thargoids
+        .iter()
+        .for_each(|goid| goid.draw(&scene_draw_instance, _model));
     scene_draw_instance.to_frame(_app, &frame).unwrap();
 }
