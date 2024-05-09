@@ -15,6 +15,6 @@ impl ClickableGuiElement for ShipHealthUi {
     }
 
     fn draw(self: &Self, app: &App, state: &GameState, draw_instance: &Draw) -> () {
-        draw_instance.text("Ship Health: 100/100");
+        draw_instance.x_y(50.0, 50.0).text("Ship Health: 100/100");
     }
 }
