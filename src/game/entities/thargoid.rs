@@ -29,7 +29,10 @@ impl PhysicsObject for Thargoid {
     }
 
     fn apply_next_frame(self: &mut Self) -> () {
-        self.xy = pt2(self.speed * self.impulse.x, self.speed * self.impulse.y)
+        self.xy = pt2(
+            self.xy.x + self.speed * self.impulse.x,
+            self.xy.y + self.speed * self.impulse.y,
+        )
     }
 
     fn get_xy(self: &Self) -> Point2 {
@@ -108,17 +111,15 @@ mod tests {
         let game_state = new_mock_game_state();
         let mut test_thargoid = Thargoid::spawn(&game_state);
 
-        // Have to force location at origin since for now we are always spawning at 400,400
-        // this is easier to visualize for tests
-        test_thargoid.xy = pt2(0.0, 0.0);
-
         test_thargoid.apply_impulse(Vec2::new(5.0, 5.0));
+
+        let expected_position = pt2(
+            test_thargoid.xy.x + test_thargoid.speed * 5.0,
+            test_thargoid.xy.y + test_thargoid.speed * 5.0,
+        );
         test_thargoid.apply_next_frame();
 
         // For now, speed just represents what percentage of an applied impulse magnitude we utilize
-        assert_eq!(
-            test_thargoid.get_xy(),
-            pt2(test_thargoid.speed * 5.0, test_thargoid.speed * 5.0)
-        );
+        assert_eq!(test_thargoid.get_xy(), expected_position);
     }
 }
