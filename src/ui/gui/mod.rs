@@ -1,6 +1,6 @@
 use crate::game::game_state::game_state::GameState;
 use nannou::event::Update;
-use nannou_egui::{egui, Egui};
+use nannou_egui::egui;
 
 pub fn draw_gui(model: &mut GameState, update: Update) {
     let egui = &mut model.egui;
